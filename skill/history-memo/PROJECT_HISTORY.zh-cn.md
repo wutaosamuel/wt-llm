@@ -46,6 +46,7 @@
 |------|------|
 | 2026-07-02 | 创建了 `update-history-memo` skill、`/init-history-memo` 命令，以及中英双语 `PROJECT_HISTORY` 模板。范围定为通用开发（软件 / 硬件 / 嵌入式 / 工具开发）。加入 PowerShell+bash 双日期命令、「只记录成功方案」规则，并将硬件 tips 精简为只记录理由。项目类型标签改为 `hardware`。 |
 | 2026-07-02 | 在两个模板、两个根目录上下文文件、skill 和命令中新增 `Others`/「其他」兜底章节（附「不当垃圾堆」约束）。 |
+| 2026-07-06 | 检查了 skill/命令是否会影响当前 session 的对话语言；确认其中英双语措辞只作用于生成的 `PROJECT_HISTORY.*.md` 文件，不影响对话语言。核实 `skills/update-history-memo/SKILL.md` 与 `.opencode/` 下副本逐字一致。确立目录读写约定：`./skills/`、`./commands/` 可读可写，`.opencode/` 仅可读。 |
 
 ## 下一步计划
 - 可选：在 `AGENTS.md` 加入那一行，使备忘每次 session 自动加载。
@@ -54,6 +55,10 @@
 ## 约定与规范
 - Skill 文件 `SKILL.md` 用英文写；上下文文件双语。
 - Skill 名 / 命令名采用小写连字符形式：`update-history-memo`、`init-history-memo`。
+- Skill/命令的语言作用域：skill 与命令中的中英双语措辞，只约束「生成的备忘文件」
+  的语言，绝不决定 session 的对话语言。
+- 本项目目录读写约定：源目录 `./skills/` 与 `./commands/` 可读可写；`.opencode/`
+  为已安装副本，仅可读。
 
 ## 其他
 <!-- 不属于以上任何章节、但可能有用的信息。

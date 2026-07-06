@@ -33,6 +33,29 @@ Applies to:
 - **Precise edits** of existing files where the exact replacement is
   pre-specified (replace X with Y, nothing else).
 
+## How I get the content
+
+The content already EXISTS in this session — I do not enter a "waiting" mode and
+I do not ask the user to re-paste content that is already present.
+
+I resolve the source in this order:
+
+1. **Manual fallback.** If content is explicitly provided wrapped in the
+   delimiters (see below), I use it exactly.
+2. **Session (default).** Otherwise, I look back through the conversation and
+   take the MOST RECENT final content the higher-capability model produced,
+   together with the target file path it named for that content.
+
+For the target path, I resolve in this order:
+
+1. If an absolute path is given, I use it.
+2. If a filename or relative path is given, I resolve it against the current
+   working directory. If that yields exactly one file (or the parent directory
+   is unambiguous), I use it WITHOUT asking.
+3. Only when the path is genuinely ambiguous — e.g. the same filename exists in
+   multiple directories, or no directory can be inferred — do I STOP and ask. I
+   never guess in that case.
+
 ## Hard rules (violating any = failure)
 
 1. **Copy character-for-character.** Change NOTHING — not a single character,
@@ -57,9 +80,11 @@ Applies to:
 7. **On any difference**, report the difference and rewrite. Only report the
    task as done after confirming zero differences.
 
-## Content delimiter convention
+## Content delimiter convention (manual fallback, optional)
 
-The content to write is provided wrapped in delimiters:
+The default is to pull content from this session (see "How I get the content").
+Only when content is NOT already present may it be provided explicitly, wrapped
+in delimiters:
 
 ```
 <<<CONTENT>>>

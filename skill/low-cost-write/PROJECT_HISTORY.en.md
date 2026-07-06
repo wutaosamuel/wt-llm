@@ -40,19 +40,45 @@
 - The system prompt reported "no skills available", but the actual project does
   support skills (an existing skills directory was found). Lesson: verify the
   real project environment rather than trusting the ambient system prompt.
+- A Command must not be designed to "enter a mode and then wait for the user to
+  paste content separately". When the content was already produced by the
+  higher-capability model in the same session, it should proactively look back
+  through the session for the content and target path rather than idling on an
+  empty `$ARGUMENTS`; otherwise an argument-less `/low-cost-write` has nothing to
+  write and just stalls in a waiting state.
+- Whether a Command/Skill file's body is in English or Chinese only affects the
+  file's own content, not the language used in the current session. English is
+  chosen purely to follow the existing convention, not to avoid a language
+  effect.
+- When the target file already exists, the Write tool requires a Read first
+  before overwriting (even if the file is empty). The low-cost executor flow
+  should treat "read before write" as a fixed step to avoid the first write
+  being blocked.
 
 ## Development History
 | Date | Summary |
 |------|---------|
 | 2026-07-06 | Designed a low-cost verbatim-write workflow (expensive model generates, cheap model writes). Created the `low-cost-write` Skill (`.opencode/skills/low-cost-write/SKILL.md`) and Command (`.opencode/commands/low-cost-write.md`), both enforcing character-for-character copying, no rewriting, single-file scope, and mandatory read-back verification, using a `<<<CONTENT>>>...<<<END>>>` delimiter convention. Initialized this project history memo. |
+| 2026-07-06 | Fixed `/low-cost-write` only "entering a waiting mode" instead of executing. The Command and SKILL were built entirely around `$ARGUMENTS` and told the model to wait for the user to paste content separately, so an argument-less invocation had nothing to write. Changed to: by default look back through the current session, take the higher-capability model's most recent final content plus the target path it named, and write it verbatim; if the path is ambiguous, STOP and ask (never guess); the `Path/Operation/<<<CONTENT>>>` manual format is demoted to an optional fallback. |
+| 2026-07-06 | Test-ran the new `/low-cost-write` workflow: entered low-cost executor mode, pulled the higher-capability model's already-generated content from this session, wrote it to `tmp.txt`, confirmed write with read-back verification; followed up with byte-level audit confirming 75 bytes, LF line endings, zero differences. Passed. |
+| 2026-07-06 | Refined the target path resolution in `low-cost-write`: when a filename plus working directory can uniquely identify a file, write it directly without asking; only STOP and ask when the path is genuinely ambiguous (same filename in multiple directories, or directory cannot be inferred). Reduced tedious confirmations. |
 
 ## Next Steps
-- Optionally validate the `low-cost-write` Command/Skill on a real "expensive
-  generates -> cheap writes" task and confirm the read-back verification catches
-  alterations.
+- (Done) Validated the `low-cost-write` workflow on `tmp.txt` with a byte-level
+  read-back check. A follow-up negative test (deliberately altered content) could
+  confirm the read-back verification actively reports differences.
+- Nail down the trailing-newline convention: whether the content ends with a
+  newline is decided by the delivered content; the executor preserves it
+  verbatim and neither adds nor removes it.
 - Consider whether an `AGENTS.md` is warranted for this project.
 
 ## Conventions & Standards
-- Skill/Command files use English content with frontmatter following the existing
-  `update-history-memo` style (`name`, `description`, `license: MIT`,
-  `compatibility: opencode`, `metadata`).
+- Skill/Command files use English content (following the existing convention; the
+  file language does not affect the session's conversation language), with
+  frontmatter following the existing `update-history-memo` style (`name`,
+  `description`, `license: MIT`, `compatibility: opencode`, `metadata`).
+- `/low-cost-write` by default extracts the higher-capability model's
+  already-generated content from the current session and writes it to the target
+  file it named; if the target path is ambiguous it stops and asks, never
+  guessing. The manual `Path/Operation/<<<CONTENT>>>` format is an optional
+  fallback.

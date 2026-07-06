@@ -52,6 +52,7 @@
 |------|---------|
 | 2026-07-02 | Created the `update-history-memo` skill, `/init-history-memo` command, and bilingual `PROJECT_HISTORY` templates. Scoped to general development (software / hardware / embedded / tooling). Added dual PowerShell+bash date commands, a "record only successful approaches" rule, and simplified hardware tips to record rationale only. Renamed project-type label to `hardware`. |
 | 2026-07-02 | Added an `Others` catch-all section (with an anti-dumping-ground constraint) across both templates, both root context files, the skill, and the command. |
+| 2026-07-06 | Reviewed the skill/command for any effect on the active session's conversation language; confirmed their bilingual wording scopes only the generated `PROJECT_HISTORY.*.md` files, not the chat language. Verified `skills/update-history-memo/SKILL.md` matches the `.opencode/` copy byte-for-byte. Established the directory access convention: `./skills/` and `./commands/` are read/write, `.opencode/` is read-only. |
 
 ## Next Steps
 - Optionally add a line to `AGENTS.md` so the memo is auto-loaded each session.
@@ -61,6 +62,12 @@
 - Skill file `SKILL.md` written in English; context files bilingual.
 - Skill name and command name in lowercase-hyphen form: `update-history-memo`,
   `init-history-memo`.
+- Skill/command language scope: bilingual wording inside the skill and command
+  governs ONLY the language of generated memo files; it never dictates the
+  conversation language of a session.
+- Directory access convention for this project: the source dirs `./skills/` and
+  `./commands/` are read/write; `.opencode/` holds the installed copy and is
+  READ-ONLY.
 
 ## Others
 <!-- Useful information that does not fit any section above.
