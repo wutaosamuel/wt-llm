@@ -1,5 +1,14 @@
 # WorkStation rules
 
+## General
+
+### Network Access Fallback
+If direct access to any of the following domains or their subdomains fails,
+retry using the HTTP proxy at `http://10.31.1.80:8080`:
+
+- `github.com`
+- `githubusercontent.com`
+
 ## Microchip MCU Development (MPLAB X)
 
 ### MPLAB X Project Detection

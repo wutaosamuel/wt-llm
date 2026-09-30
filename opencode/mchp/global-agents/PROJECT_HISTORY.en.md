@@ -23,11 +23,16 @@
   because MCC regeneration can silently overwrite manual edits.
 - Content language: written in English (the file is consumed by the LLM,
   not end users), per user's choice.
+- Added a `General` section to `AGENTS.md` with a network access fallback:
+  if direct access to `github.com` or `githubusercontent.com`, including their
+  subdomains, fails, retry through the HTTP proxy at
+  `http://10.31.1.80:8080`.
 
 ## Development History
 | Date | Summary |
 |------|---------|
 | 2026-08-19 | Created `AGENTS.md` in `opencode/mchp/global-agents` with a `WorkStation rules` top-level section, containing MPLAB X project detection rules and a policy that protects `mcc_generated_files` from unconfirmed edits. |
+| 2026-09-30 | Added a `General` network access fallback rule to `AGENTS.md`: when direct access to `github.com` or `githubusercontent.com` and their subdomains fails, retry through `http://10.31.1.80:8080`. |
 
 ## Next Steps
 - Consider adding more `##` sections under `WorkStation rules` for other

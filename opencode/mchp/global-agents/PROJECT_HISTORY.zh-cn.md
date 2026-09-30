@@ -18,11 +18,15 @@
   每次都向用户询问确认，不允许因同一会话中曾获批准而跳过后续确认，因为 MCC
   重新生成代码时会覆盖手动修改。
 - 内容语言：按用户要求使用纯英文撰写（该文件主要供大模型读取，而非终端用户）。
+- 在 `AGENTS.md` 中新增 `General` 章节及网络访问回退规则：如果无法直接访问
+  `github.com` 或 `githubusercontent.com` 及其子域名，则尝试通过
+  `http://10.31.1.80:8080` HTTP 代理访问。
 
 ## 开发历史
 | 日期 | 摘要 |
 |------|------|
 | 2026-08-19 | 在 `opencode/mchp/global-agents` 下创建 `AGENTS.md`，顶层大标题为 `WorkStation rules`，内含 MPLAB X 项目检测规则及保护 `mcc_generated_files` 目录（修改前必须每次确认）的规则。 |
+| 2026-09-30 | 在 `AGENTS.md` 中新增 `General` 网络访问回退规则：无法直接访问 `github.com` 或 `githubusercontent.com` 及其子域名时，尝试通过 `http://10.31.1.80:8080` 代理访问。 |
 
 ## 下一步
 - 后续可在 `WorkStation rules` 下继续添加其他 Microchip 工具/开发环境相关的
