@@ -31,6 +31,45 @@ it is not a substitute for detailed feature specifications. Do not put
 feature-specific requirements in `AGENTS.md` (project-wide rules) or in this
 skill file. Do not write implementation code as part of this workflow.
 
+## Business rule change control
+
+Core business rules are rules stated or explicitly confirmed by the user that
+affect observable behavior, results or data, calculations, permissions,
+safety/security, compliance, or acceptance outcomes. Assign stable IDs such as
+`BR1` and record the source and status. If it is unclear whether a rule is
+core, treat it as core and ask rather than delegating it as an implementation
+choice.
+
+Neither this skill nor a downstream implementation AI may change, weaken,
+remove, reinterpret, or replace a confirmed core business rule without the
+user's explicit approval of the specific change. Existing code, technical
+constraints, and implementation convenience are not approval to change a rule.
+Silence, an ambiguous instruction to proceed, or approval of a different option
+does not count as approval.
+
+When confirmed rules conflict with each other or a technical constraint:
+
+1. Identify the conflicting rules or constraints and their sources.
+2. Explain the effect on implementation and acceptance.
+3. Present possible options, including which business behavior each option
+   changes and its trade-offs. Keep recommendations labeled as proposals.
+4. Mark the decision as blocking, preserve the confirmed rules, and wait for
+   the user's explicit decision before changing them or proceeding with work
+   that depends on the decision. If interaction is unavailable, stop the
+   affected work and report the decision needed; do not guess.
+5. After approval, record the decision, selected option, date if known, and
+   affected rule and acceptance-criterion IDs in the specification or project
+   breakdown. Update those rules and criteria to reflect the approved change.
+
+Distinguish a code/specification mismatch from a technical conflict. Do not
+treat existing code as authority to rewrite a confirmed rule. If the confirmed
+rule can be met without violating another confirmed requirement or technical
+constraint, specify the mismatch and require implementation to follow the
+confirmed rule. If it cannot, mark the affected work as blocked pending a user
+decision. An implementation AI must not hide a mismatch by changing tests,
+acceptance criteria, defaults, fallbacks, or placeholder behavior; tests may be
+changed only to accurately verify the approved specification, not to weaken it.
+
 ## Workflow
 
 1. **Understand the request.** Extract the goal, current and desired behavior,
@@ -58,6 +97,10 @@ skill file. Do not write implementation code as part of this workflow.
    deliver the breakdown rather than forcing specifications for every item.
    Ask only when a decision materially affects the boundaries or acceptance
    outcomes.
+   Preserve confirmed core business rules and their IDs in the shared
+   constraints and every affected work item. Identify conflicts spanning work
+   items and apply the business rule change control above; do not split or
+   omit a rule in a way that changes its meaning.
 
 4. **Distinguish certainty.** Mark consequential information as confirmed
    (stated by the user or verified against a source), proposed (a recommendation
@@ -72,8 +115,10 @@ skill file. Do not write implementation code as part of this workflow.
    existing commands, manual steps, or a device/environment. Ask concise,
    grouped questions only when an unknown could materially affect the external
    contract, core behavior, safety/security, compatibility, measurable targets,
-   or acceptance criteria. Do not invent numeric targets. Leave incidental
-   implementation choices to the coding AI.
+   or acceptance criteria. Conflicts involving confirmed core business rules
+   are always blocking; do not leave them as implementation choices. Do not
+   invent numeric targets. Leave only incidental choices that cannot alter
+   confirmed behavior to the coding AI.
 
 6. **Preserve useful research.** Summarize only findings that affect decisions
    or boundaries, including relevant findings already obtained in this session.
@@ -86,8 +131,10 @@ skill file. Do not write implementation code as part of this workflow.
    failure behavior; distinguish mandatory constraints from optional
    suggestions; identify existing behavior that must remain unchanged. Give
    each important behavior a testable acceptance criterion and a verification
-   method. Omit irrelevant template sections instead of filling them with
-   guesses.
+   method. Always include the business rules and change control section from
+   the outline, even when no core rule has been confirmed or no decision is
+   pending; state that clearly rather than omitting the section. Omit other
+   irrelevant template sections instead of filling them with guesses.
 
 8. **Plan only when complexity warrants it.** For multi-module work,
    migrations, external dependencies, or substantial risks, provide
@@ -104,6 +151,8 @@ skill file. Do not write implementation code as part of this workflow.
    state whether its feature boundaries are confirmed or proposed and identify
    decisions needed before detailing affected items. Do not claim a project
    fact was checked, or a test passed, unless it was actually checked or run.
+   Any unresolved conflict that could change a confirmed core business rule
+   blocks readiness for the affected work.
 
 10. **Deliver or save.** By default, present the project breakdown or full
     Markdown feature specification in the response without changing project
@@ -135,6 +184,11 @@ sections to the available evidence:
   spanning items; mark unverified relationships as proposed.
 - **Open decisions:** questions that materially affect item boundaries or
   project-wide acceptance, with their impact.
+- **Business rule change control:** confirmed core business rules with stable
+  IDs and sources; conflicts and blocking decisions; and instructions that
+  implementation AI must preserve the rules and pause affected work pending the
+  user's explicit decision. Include this section even if no core rules or
+  conflicts have been identified.
 
 Do not invent priorities or schedules. Do not turn the breakdown into a
 detailed specification for every item. A detailed specification derived from
@@ -152,6 +206,39 @@ proposals, and open questions distinct throughout.
 - Target project or module; sources inspected; unverified assumptions
 - For an item from a project breakdown: parent project and item ID;
   applicable shared constraints and known dependencies
+
+### Business rules and change control (always include)
+
+| ID | Business rule | Source | Status |
+|----|---------------|--------|--------|
+| BR1 | ... | User statement/confirmation | Confirmed |
+
+If none have been confirmed, state that no core business rules have been
+confirmed. Do not turn proposals, inferences, or existing code behavior into
+confirmed rules.
+
+**Instructions to the implementation AI:**
+
+- Implement confirmed business rules as written. Do not change their meaning
+  or weaken tests or acceptance criteria to make a conflicting implementation
+  pass.
+- If a confirmed rule conflicts with another requirement or a technical
+  constraint, stop the affected work, report the conflicting items and their
+  sources, explain the impact, present options and trade-offs, and wait for the
+  user's explicit decision. Do not infer approval from silence or an ambiguous
+  instruction to proceed. If the user cannot be asked, report the blocker
+  without choosing an option.
+- Continue only work that does not depend on the unresolved decision, and
+  report which work is paused and which continues.
+- Treat code/specification differences as discrepancies, not permission to
+  change a confirmed rule. Implement the rule when technically possible without
+  violating another confirmed requirement; otherwise pause and request a
+  decision. Change tests only to accurately verify the approved specification.
+
+**Blocking conflicts and decisions:** list the conflict, impact, options, and
+decision status. After approval, record the selected option, decision date if
+known, and affected business-rule and acceptance-criterion IDs. If there are no
+conflicts or decisions, state that none are currently identified.
 
 ### 1. Goal and background
 
@@ -178,6 +265,9 @@ proposals, and open questions distinct throughout.
 | ID | Given / condition | When / trigger | Then / observable result |
 |----|-------------------|----------------|--------------------------|
 | R1 | ...               | ...            | ...                      |
+
+Link applicable business-rule IDs (`BR1`, etc.) to behavior rules and
+acceptance criteria so confirmed rules remain traceable through verification.
 
 ### 6. Edge and failure cases
 
@@ -251,6 +341,14 @@ Apply only where relevant:
 - Research is concise, attributable, and not confused with user requirements.
 - Verification steps are actionable and not misrepresented as already run.
 - Readiness agrees with remaining blocking questions.
+- Confirmed core business rules have stable IDs, sources, and traceable
+  acceptance criteria; no rule was silently changed or treated as an incidental
+  implementation choice.
+- The business rules and change control section is present in every detailed
+  specification and project breakdown, and tells implementation AI to pause
+  affected work pending the user's explicit decision when required.
+- Cross-rule and technical conflicts are identified as blocking decisions;
+  approved changes are recorded and reflected in affected rules and criteria.
 - For project-level requests, the breakdown records bounded items,
   project-wide outcomes, and known cross-item relationships without inventing
   priorities or treating proposed boundaries as confirmed.
