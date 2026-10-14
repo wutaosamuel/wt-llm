@@ -136,13 +136,20 @@ changed only to accurately verify the approved specification, not to weaken it.
    pending; state that clearly rather than omitting the section. Omit other
    irrelevant template sections instead of filling them with guesses.
 
-8. **Plan only when complexity warrants it.** For multi-module work,
-   migrations, external dependencies, or substantial risks, provide
-   milestone-level implementation phases with dependencies, deliverables, and
-   completion criteria. A project breakdown defines *what* is to be delivered;
-   implementation phases describe *when and in what order* to deliver it. Do
-   not specify every code edit, substitute phases for the behavioral contract,
-   or force phases onto simple features.
+8. **Recommend phases only when useful.** In a project breakdown with
+   multiple items, optionally group existing item IDs into a recommended
+   execution order (Phase 1, Phase 2, ...). Group by known dependencies only:
+   items with no dependencies on other items form Phase 1, and each later
+   phase contains items whose dependencies are all in earlier phases. List
+   items that depend on an open decision or business rule conflict as
+   `Blocked`, with the decision they wait for, instead of assigning them to a
+   phase. Skip phases when all items are independent or there is only one
+   item. For each phase, give only item IDs, dependencies, and a short
+   completion condition; do not repeat detailed requirements, add estimates
+   or dates, infer priorities, or invent items to fill phases. Label phases as
+   proposed unless the user confirms them. Phases are not a prerequisite for
+   detailing items: the user may later select any item for a separate
+   detailed specification with this skill.
 
 9. **Assess readiness.** Mark a detailed specification "Ready to implement"
    only if no unresolved issue could materially change its implementation or
@@ -182,6 +189,15 @@ sections to the available evidence:
   observable completion condition, and status (confirmed or proposed).
 - **Relationships:** known dependencies, shared interfaces, or requirements
   spanning items; mark unverified relationships as proposed.
+- **Recommended phases (optional):** only when useful, following workflow
+  step 8. State once whether the phases are proposed or confirmed:
+
+  | Phase | Items | Depends on | Completion condition |
+  |-------|-------|------------|----------------------|
+  | Phase 1 | F1, F2 | - | F1 and F2 meet their completion conditions |
+  | Phase 2 | F3 | F1 | F3 meets its completion condition |
+  | Blocked | F4 | Q2 | Assign to a phase after Q2 is decided |
+
 - **Open decisions:** questions that materially affect item boundaries or
   project-wide acceptance, with their impact.
 - **Business rule change control:** confirmed core business rules with stable
@@ -189,6 +205,8 @@ sections to the available evidence:
   implementation AI must preserve the rules and pause affected work pending the
   user's explicit decision. Include this section even if no core rules or
   conflicts have been identified.
+- **Next step:** state that the user may select one or more items to detail
+  separately with this skill; following the phases first is not required.
 
 Do not invent priorities or schedules. Do not turn the breakdown into a
 detailed specification for every item. A detailed specification derived from
@@ -308,13 +326,7 @@ Do not turn unspecified metrics into arbitrary numeric requirements.
 |---------|-------------------------------|---------------------|
 | ...     | ...                           | Verified / unverified |
 
-### 12. Implementation phases (complex work only)
-
-| Phase | Deliverable | Dependencies | Completion criteria |
-|-------|-------------|--------------|---------------------|
-| ...   | ...         | ...          | ...                 |
-
-### 13. Open questions
+### 12. Open questions
 
 | Question | Impact on implementation or acceptance | Blocking? |
 |----------|----------------------------------------|-----------|
@@ -352,5 +364,9 @@ Apply only where relevant:
 - For project-level requests, the breakdown records bounded items,
   project-wide outcomes, and known cross-item relationships without inventing
   priorities or treating proposed boundaries as confirmed.
+- Recommended phases, if present, reference existing item IDs, follow only
+  known dependencies, list items waiting on decisions as `Blocked`, are
+  labeled proposed unless confirmed, and do not prevent the user from
+  detailing any item separately.
 - Detailed specifications derived from a breakdown identify their parent
   item and preserve applicable shared constraints.
