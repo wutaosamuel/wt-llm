@@ -101,6 +101,9 @@ changed only to accurately verify the approved specification, not to weaken it.
    constraints and every affected work item. Identify conflicts spanning work
    items and apply the business rule change control above; do not split or
    omit a rule in a way that changes its meaning.
+   If the user requests a skeleton, prototype, feasibility validation, or
+   rough reference implementation, define it as P0 work following the P0
+   prototype track section below.
 
 4. **Distinguish certainty.** Mark consequential information as confirmed
    (stated by the user or verified against a source), proposed (a recommendation
@@ -149,7 +152,8 @@ changed only to accurately verify the approved specification, not to weaken it.
    or dates, infer priorities, or invent items to fill phases. Label phases as
    proposed unless the user confirms them. Phases are not a prerequisite for
    detailing items: the user may later select any item for a separate
-   detailed specification with this skill.
+   detailed specification with this skill. P0 work is not part of this
+   dependency order; list it in a separate `P0 (anytime)` row.
 
 9. **Assess readiness.** Mark a detailed specification "Ready to implement"
    only if no unresolved issue could materially change its implementation or
@@ -159,7 +163,8 @@ changed only to accurately verify the approved specification, not to weaken it.
    decisions needed before detailing affected items. Do not claim a project
    fact was checked, or a test passed, unless it was actually checked or run.
    Any unresolved conflict that could change a confirmed core business rule
-   blocks readiness for the affected work.
+   blocks readiness for the affected work. P0 specifications follow the
+   readiness rule in the P0 prototype track section.
 
 10. **Deliver or save.** By default, present the project breakdown or full
     Markdown feature specification in the response without changing project
@@ -175,6 +180,48 @@ changed only to accurately verify the approved specification, not to weaken it.
     or an index by default. If the project root is unknown or writing is
     unavailable, provide the document and a suggested path instead. Follow any
     higher-priority restrictions on protected or generated files.
+
+## P0 prototype track
+
+P0 is a reference and validation track, not a phase. It may run at any time
+and repeatedly, before, between, or alongside phases. Create P0 work only when
+the user requests it. Do not number P0 as a phase or treat it as a
+prerequisite for Phase 1. This skill writes the P0 specification; it does not
+write the prototype code.
+
+A P0 run may build or extend a skeleton, validate feasibility, or produce
+rough feature code as a reference for later implementation. Its specification
+must state:
+
+- **Targets:** the breakdown item IDs and open questions it covers. A P0 run
+  may target questions that block `Blocked` items.
+- **Skeleton:** whether it creates or extends the project base (build, run,
+  and test commands), module boundaries and shared interfaces, and the
+  end-to-end main flow. Module internals may be stubs.
+- **Depth per item:** V0 document check, V1 minimal probe in the real
+  environment, V2 integrated into the skeleton main flow, V3 measured against a
+  user-confirmed target, or rough feature implementation. Do not invent
+  numeric targets; without a confirmed target, require measuring and
+  reporting.
+- **Shortcuts and exclusions:** permitted mocks, stubs, and hard-coded data
+  and where they apply, and excluded functionality.
+- **Disposition:** for each part, whether it is throwaway or meant to be
+  carried forward. Ask the user if this is unknown; it determines quality and
+  test requirements.
+- **Business rules:** confirmed core rules in scope are implemented as written
+  or listed as not covered; never simplified silently. Other business behavior
+  is labeled proposed. P0 code never confirms, changes, or replaces a rule.
+- **Report:** a feasibility matrix listing, for each target, the depth reached,
+  result (feasible / not feasible / feasible with conditions), evidence
+  (commands, outputs, measurements, environment), assumptions, shortcuts, and
+  suggested breakdown updates.
+
+A P0 specification may be "Ready to implement" once its targets, depth, and
+disposition are fixed, even if the product questions it investigates remain
+open. Update the breakdown from a P0 report only after the user reviews it;
+findings remain proposed until the user accepts them. Later implementation may
+use P0 code as a reference, but P0 code is not an approved implementation or
+evidence that a requirement is confirmed.
 
 ## Project breakdown outline
 
@@ -197,6 +244,9 @@ sections to the available evidence:
   | Phase 1 | F1, F2 | - | F1 and F2 meet their completion conditions |
   | Phase 2 | F3 | F1 | F3 meets its completion condition |
   | Blocked | F4 | Q2 | Assign to a phase after Q2 is decided |
+  | P0 (anytime) | P0-1 | - | P0-1 report reviewed by the user |
+
+  Include the `P0 (anytime)` row only when P0 work has been requested.
 
 - **Open decisions:** questions that materially affect item boundaries or
   project-wide acceptance, with their impact.
@@ -370,3 +420,7 @@ Apply only where relevant:
   detailing any item separately.
 - Detailed specifications derived from a breakdown identify their parent
   item and preserve applicable shared constraints.
+- P0 work is defined as an anytime track outside the phase order, states its
+  targets, depth per item, shortcuts, and disposition, and its code and
+  findings are not treated as confirmed requirements or approved
+  implementation until the user reviews them.
