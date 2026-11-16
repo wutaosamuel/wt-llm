@@ -1,6 +1,6 @@
 ---
 name: chat-trace
-description: Preserve selected questions from the current session verbatim with concise AI response summaries in bilingual PROJECT_TRACE Markdown files. Use when the user asks to record questions or save conversation history, including 记录提问, 保存历史提问, 保存对话记录, and 整理问答. Always confirm question selection first, then present both language previews for approval before writing.
+description: Archive complete selected questions from the current session in Chinese and English with original-language labels and concise AI response summaries in bilingual PROJECT_TRACE Markdown files. Use when the user asks to record questions or save conversation history, including 记录提问, 保存历史提问, 保存对话记录, and 整理问答. Always confirm question selection first, then present both language previews for approval before writing.
 compatibility: opencode
 metadata:
   audience: developers
@@ -11,17 +11,19 @@ metadata:
 
 ## Purpose
 
-Archive the user's selected questions from the current session without
-rewriting or omission, together with concise summaries of the corresponding
-AI responses.
+Archive the user's selected questions from the current session in full,
+translated into each file's language when needed, together with concise
+summaries of the corresponding AI responses. Identify each question's
+original language.
 
 Maintain two Markdown files in the current working directory (workspace root):
 
-- `PROJECT_TRACE.zh-cn.md` — Chinese AI summaries
-- `PROJECT_TRACE.en.md` — English AI summaries
+- `PROJECT_TRACE.zh-cn.md` — Simplified Chinese questions and AI summaries
+- `PROJECT_TRACE.en.md` — English questions and AI summaries
 
-Both files preserve the user questions in their original language.
-Do not replace original questions with translations.
+Preserve questions verbatim in the version matching their original language.
+In the other version, translate the complete question without omission or
+summarization. Keep code, paths, and links unchanged.
 
 This SKILL.md is written in English. Use this skill for requests in either
 English or Chinese.
@@ -70,11 +72,22 @@ Never abbreviate a question or replace its content with ellipses.
 Include only selected questions, retaining their original numbers and order.
 
 Present the full proposed content for both files:
-- Chinese summaries for `PROJECT_TRACE.zh-cn.md`.
-- English summaries for `PROJECT_TRACE.en.md`.
+- Simplified Chinese questions and summaries for `PROJECT_TRACE.zh-cn.md`.
+- English questions and summaries for `PROJECT_TRACE.en.md`.
 
 Use the archive template below. Both versions must contain the same selected
 questions and equivalent summaries.
+
+Translate each complete question into the target language when needed; do not
+summarize it. Preserve original text when it already matches the target language.
+Keep code, paths, and links unchanged in translations.
+
+Include an original-language column for each question in both previews and files.
+For a Chinese original, use `zh-cn (original)` in the Chinese version and
+`zh-cn (translated to en)` in the English version. For an English original,
+use `en (original)` in the English version and `en (translated to zh-cn)` in
+the Chinese version. Identify other or mixed original languages accurately
+rather than forcing an English or Chinese label.
 
 Summary requirements:
 - Faithfully summarize the actual response without adding conclusions or advice.
@@ -101,26 +114,29 @@ If the user cancels, do not write any archive content.
 ## Archive template
 
 Each saved batch uses the following structure. Replace placeholders with
-the actual timestamp, selected questions, and approved summaries.
+the actual timestamp, selected questions, original-language labels, and approved
+summaries.
 
 ```markdown
 ## YYYY-MM-DD HH:mm ±HH:mm
 
-| No. | User question (complete original text) | Concise AI response summary |
-|-----|----------------------------------------|-----------------------------|
-| [Original number] | [Complete original question] | [Approved summary] |
+| No. | Complete user question | Original language | Concise AI response summary |
+|-----|------------------------|-------------------|-----------------------------|
+| [Original number] | [Original text or complete translation] | [Original language and translation status] | [Approved summary] |
 ```
 
-Use Chinese column headings and summaries in the Chinese file, and English
-column headings and summaries in the English file. Keep question text
-unchanged in both.
+Use Chinese column headings, questions, and summaries in the Chinese file,
+and English column headings, questions, and summaries in the English file.
 
-For complex questions, the complete-original-text sections referenced by
-the table are part of both the preview and the saved batch.
+For complex questions, the complete-question sections referenced by the table
+are part of both the preview and the saved batch. Apply the same target-language
+and original-language labeling rules to these sections.
 
 ## Hard rules
 
-- Preserve selected questions verbatim; summarize only AI responses.
+- Preserve original questions verbatim in the selection table and matching-language
+  archive; translate them completely in the other archive. Summarize only AI responses.
+- Identify each question's original language and whether its text is translated.
 - Never fabricate unreadable questions or responses.
 - Keep the Chinese and English batches aligned.
 - Do not combine or skip the two confirmations.
